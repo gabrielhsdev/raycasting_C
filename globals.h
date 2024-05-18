@@ -1,11 +1,16 @@
 #ifndef RAYCASTER_GLOBALS_H
 #define RAYCASTER_GLOBALS_H
 
+#include <stdbool.h>
+
 #define mapWidth 24
 #define mapHeight 24
 #define screenWidth 640
 #define screenHeight 480
 #define screenName "Raycaster"
+
+int gameStatus = 0;
+double time, oldTime = 0;
 
 typedef struct {
     double playerX;
@@ -23,8 +28,20 @@ typedef struct {
  * [ sin(a)  cos(a) ]
 */
 
-// create Player
-Player player = {22, 12, -1, 0, 0, 0.66};
+typedef struct {
+    int forward;
+    int backward;
+    int left;
+    int right;
+    int rotateLeft;
+    int rotateRight;
+    double moveSpeed;
+    double rotSpeed;
+} Controller;
+
+// Create Player and Controller structs
+Player player = {22, 12, 1, 0, 0, 0.66};
+Controller controller = {0, 0, 0, 0, 0, 0, 0.08, 0.05};
 
 int worldMap[mapWidth][mapHeight] =
         {
