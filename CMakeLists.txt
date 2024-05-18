@@ -11,7 +11,7 @@ include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(raycaster main.c
-        globals.h)
+add_executable(raycaster main.c globals.h)
 
-target_link_libraries(raycaster PRIVATE OpenGL::GL GLUT::GLUT)
+# Link against OpenGL, GLUT, GLU, and the math library
+target_link_libraries(raycaster PRIVATE OpenGL::GL GLUT::GLUT GLU m)

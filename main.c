@@ -1,108 +1,107 @@
 #include <GL/glut.h>
 #include <stdio.h>
+#include <math.h>
 #include "globals.h"
 
-double calculateFps(double time, double oldTime) {
-    return 1.0 / (time - oldTime);
+float degToRad(int a) { return a*M_PI/180.0;}
+int FixAng(int a){ if(a>359){ a-=360;} if(a<0){ a+=360;} return a;}
+
+void init()
+{
+    glClearColor(0.3,0.3,0.3,0);
+    gluOrtho2D(0,SCREEN_WIDTH,SCREEN_HEIGHT,0);
+    player.direction_x = cos(degToRad(player.angle));
+    player.direction_y = sin(degToRad(player.angle));
 }
 
-void calculateAndPrintFps() {
-    oldTime = time;
-    time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-    double FPS = calculateFps(time, oldTime);
-    printf("FPS: %f\n", FPS);
+void Buttons(unsigned char key,int x,int y)
+{
+    printf("Key: %c\n",key);
+    if(key=='w')
+    {
+        player.postion_x += player.direction_x*player.moveSpeed;
+        player.postion_y += player.direction_y*player.moveSpeed;
+    }
+    if(key=='s')
+    {
+        player.postion_x -= player.direction_x*player.moveSpeed;
+        player.postion_y -= player.direction_y*player.moveSpeed;
+    }
+    if (key=='a')
+    {
+        player.angle -= player.rotSpeed;
+        player.direction_x = cos(degToRad(player.angle));
+        player.direction_y = sin(degToRad(player.angle));
+    }
+    if (key=='d')
+    {
+        player.angle += player.rotSpeed;
+        player.direction_x = cos(degToRad(player.angle));
+        player.direction_y = sin(degToRad(player.angle));
+    }
+
+    glutPostRedisplay();
 }
 
-void movePlayer() {
-    if (controller.forward == 1) {
-        player.playerX += player.directionX * controller.moveSpeed;
-        player.playerY += player.directionY * controller.moveSpeed;
-        controller.forward = 0;
-    } else if (controller.backward == 1) {
-        player.playerX -= player.directionX * controller.moveSpeed;
-        player.playerY -= player.directionY * controller.moveSpeed;
-        controller.backward = 0;
+void DrawPlayer2D()
+{
+    glColor3f(1,0,0);
+    glPointSize(8);
+    glBegin(GL_POINTS);
+    glVertex2i(player.postion_x,player.postion_y);
+    glEnd();
+}
+
+void DrawRay2D(int x1,int y1,int x2,int y2)
+{
+    glColor3f(1,1,1);
+    glBegin(GL_LINES);
+    glVertex2i(x1,y1);
+    glVertex2i(x2,y2);
+    glEnd();
+}
+
+void DrawMap2D () {
+    for(int y = 0; y < MAP_HEIGHT; y++)
+    {
+        for(int x = 0; x < MAP_WIDTH; x++)
+        {
+            if(worldMap[x][y] == 1)
+            {
+                glColor3f(1,1,1);
+                glBegin(GL_QUADS);
+                glVertex2i(x*MAP_BLOCK_WIDTH, y*MAP_BLOCK_HEIGHT);
+                glVertex2i(x*MAP_BLOCK_WIDTH, y*MAP_BLOCK_HEIGHT+MAP_BLOCK_HEIGHT);
+                glVertex2i(x*MAP_BLOCK_WIDTH+MAP_BLOCK_WIDTH, y*MAP_BLOCK_HEIGHT+MAP_BLOCK_HEIGHT);
+                glVertex2i(x*MAP_BLOCK_WIDTH+MAP_BLOCK_WIDTH, y*MAP_BLOCK_HEIGHT);
+                glEnd();
+            }
+        }
     }
 }
 
-void checkGameStatusAndRedisplay() {
-    // End of frame & Draw
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    DrawMap2D();
+    DrawPlayer2D();
+    DrawRay2D(
+            player.postion_x,
+            player.postion_y,
+            player.postion_x+player.direction_x*player.ray_size,
+            player.postion_y+player.direction_y*player.ray_size
+            );
     glutSwapBuffers();
-
-    // Mark the current window as needing to be redisplayed
-    if (gameStatus == 0) {
-        glutPostRedisplay();
-    }
 }
 
-void onButtonPressed(unsigned char key, int x, int y){
-    // If "w" is pressed, move the player up. Set the Controller.forward variable to 1
-    if (key == 'w') {
-        controller.forward = 1;
-        printf("Forward\n");
-    } else if (key == 's') {
-        controller.backward = 1;
-        printf("Backward\n");
-    } else if (key == 'a') {
-        controller.left = 1;
-        printf("Left\n");
-    } else if (key == 'd') {
-        controller.right = 1;
-        printf("Right\n");
-    } else if (key == 'q') {
-        controller.rotateLeft = 1;
-        printf("Rotate Left\n");
-    } else if (key == 'e') {
-        controller.rotateRight = 1;
-        printf("Rotate Right\n");
-    }
-}
-
-void display() {
-    // Set up projection
-    glClear(GL_COLOR_BUFFER_BIT);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0.0, screenWidth, 0.0, screenHeight, -1.0, 1.0);
-
-    // Ray casting, iterate over each column of the screen
-    for (int x = 0; x < screenWidth; x++) {
-        // Calculate ray position and direction
-        double cameraX = 2 * x / (double) screenWidth - 1; // This scales x from [0, w] to [-1, 1].
-
-        // Ray direction calculation
-        double rayDirX = player.directionX + player.planeX * cameraX;
-        double rayDirY = player.directionY + player.planeY * cameraX;
-
-        // COntinue here
-    }
-
-    calculateAndPrintFps();
-    movePlayer();
-    checkGameStatusAndRedisplay();
-}
-
-int main(int argc, char** argv) {
+int main(int argc, char* argv[])
+{
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-
-    // Set fixed window size
-    glutInitWindowSize(screenWidth, screenHeight);
-
-    // Set window position to top-left corner and create window w/ name
-    glutInitWindowPosition(0, 0);
-    glutCreateWindow(screenName);
-
-    // Set background color to black
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-
-    // Call the main function
+    glutInitWindowSize(SCREEN_WIDTH,SCREEN_HEIGHT);
+    glutCreateWindow(SCREEN_NAME);
+    init();
     glutDisplayFunc(display);
-
-    // Check if any key is pressed
-    glutKeyboardFunc(onButtonPressed);
-
-    // Start the main loop
+    glutKeyboardFunc(Buttons);
     glutMainLoop();
-    return 0;
 }

@@ -1,74 +1,43 @@
 #ifndef RAYCASTER_GLOBALS_H
 #define RAYCASTER_GLOBALS_H
 
-#include <stdbool.h>
-
-#define mapWidth 24
-#define mapHeight 24
-#define screenWidth 640
-#define screenHeight 480
-#define screenName "Raycaster"
-
-int gameStatus = 0;
-double time, oldTime = 0;
+#define MAP_WIDTH 8
+#define MAP_HEIGHT 8
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 510
+#define MAP_BLOCK_WIDTH SCREEN_WIDTH / MAP_WIDTH / 2
+#define MAP_BLOCK_HEIGHT SCREEN_HEIGHT / MAP_HEIGHT
+#define SCREEN_NAME "Raycaster"
 
 typedef struct {
-    double playerX;
-    double playerY;
+    float postion_x;
+    float postion_y;
 
-    double directionX;
-    double directionY;
+    float direction_x; // player direction x
+    float direction_y; // player direction y
 
-    double planeX;
-    double planeY;
+    float angle; // player angle
+
+    float moveSpeed; // player move speed
+    float rotSpeed; // player rotation speed
+
+    float ray_size; // ray size
 } Player;
-/*
- * Rotation matrix
- * [ cos(a) -sin(a) ]
- * [ sin(a)  cos(a) ]
-*/
 
-typedef struct {
-    int forward;
-    int backward;
-    int left;
-    int right;
-    int rotateLeft;
-    int rotateRight;
-    double moveSpeed;
-    double rotSpeed;
-} Controller;
+// Create a player
+Player player = {150, 400, 0, 0, -90, 5, 3, 100};
 
-// Create Player and Controller structs
-Player player = {22, 12, 1, 0, 0, 0.66};
-Controller controller = {0, 0, 0, 0, 0, 0, 0.08, 0.05};
 
-int worldMap[mapWidth][mapHeight] =
+int worldMap[MAP_WIDTH][MAP_HEIGHT] =
         {
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 3, 0, 3, 0, 3, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2, 0, 0, 0, 0, 3, 0, 3, 0, 3, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 4, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 4, 0, 0, 0, 0, 5, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 4, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 4, 0, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+                1,1,1,1,1,1,1,1,
+                1,0,0,0,0,0,0,1,
+                1,0,0,0,0,0,0,1,
+                1,0,0,0,0,0,0,1,
+                1,0,0,0,0,0,0,1,
+                1,0,0,0,0,0,0,1,
+                1,0,0,0,0,0,0,1,
+                1,1,1,1,1,1,1,1,
         };
 
 #endif //RAYCASTER_GLOBALS_H

@@ -65,7 +65,7 @@ build CMakeFiles/raycaster.dir/main.c.o: C_COMPILER__raycaster_unscanned_Debug /
 
 build raycaster: C_EXECUTABLE_LINKER__raycaster_Debug CMakeFiles/raycaster.dir/main.c.o | /usr/lib/x86_64-linux-gnu/libglut.so /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libOpenGL.so
   FLAGS = -g
-  LINK_LIBRARIES = /usr/lib/x86_64-linux-gnu/libglut.so  /usr/lib/x86_64-linux-gnu/libGLX.so  /usr/lib/x86_64-linux-gnu/libOpenGL.so
+  LINK_LIBRARIES = /usr/lib/x86_64-linux-gnu/libglut.so  -lGLU  -lm  /usr/lib/x86_64-linux-gnu/libGLX.so  /usr/lib/x86_64-linux-gnu/libOpenGL.so
   OBJECT_DIR = CMakeFiles/raycaster.dir
   POST_BUILD = :
   PRE_LINK = :
