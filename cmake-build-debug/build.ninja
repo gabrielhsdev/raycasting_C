@@ -61,6 +61,24 @@ build CMakeFiles/raycaster.dir/player/player.c.o: C_COMPILER__raycaster_unscanne
   OBJECT_DIR = CMakeFiles/raycaster.dir
   OBJECT_FILE_DIR = CMakeFiles/raycaster.dir/player
 
+build CMakeFiles/raycaster.dir/map/map.c.o: C_COMPILER__raycaster_unscanned_Debug /home/gabriel/CLionProjects/raycaster/map/map.c || cmake_object_order_depends_target_raycaster
+  DEP_FILE = CMakeFiles/raycaster.dir/map/map.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/raycaster.dir
+  OBJECT_FILE_DIR = CMakeFiles/raycaster.dir/map
+
+build CMakeFiles/raycaster.dir/utils/utils.c.o: C_COMPILER__raycaster_unscanned_Debug /home/gabriel/CLionProjects/raycaster/utils/utils.c || cmake_object_order_depends_target_raycaster
+  DEP_FILE = CMakeFiles/raycaster.dir/utils/utils.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/raycaster.dir
+  OBJECT_FILE_DIR = CMakeFiles/raycaster.dir/utils
+
+build CMakeFiles/raycaster.dir/rays/rays.c.o: C_COMPILER__raycaster_unscanned_Debug /home/gabriel/CLionProjects/raycaster/rays/rays.c || cmake_object_order_depends_target_raycaster
+  DEP_FILE = CMakeFiles/raycaster.dir/rays/rays.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/raycaster.dir
+  OBJECT_FILE_DIR = CMakeFiles/raycaster.dir/rays
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target raycaster
@@ -69,7 +87,7 @@ build CMakeFiles/raycaster.dir/player/player.c.o: C_COMPILER__raycaster_unscanne
 #############################################
 # Link the executable raycaster
 
-build raycaster: C_EXECUTABLE_LINKER__raycaster_Debug CMakeFiles/raycaster.dir/main.c.o CMakeFiles/raycaster.dir/player/player.c.o | /usr/lib/x86_64-linux-gnu/libglut.so /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libOpenGL.so
+build raycaster: C_EXECUTABLE_LINKER__raycaster_Debug CMakeFiles/raycaster.dir/main.c.o CMakeFiles/raycaster.dir/player/player.c.o CMakeFiles/raycaster.dir/map/map.c.o CMakeFiles/raycaster.dir/utils/utils.c.o CMakeFiles/raycaster.dir/rays/rays.c.o | /usr/lib/x86_64-linux-gnu/libglut.so /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libOpenGL.so
   FLAGS = -g
   LINK_LIBRARIES = /usr/lib/x86_64-linux-gnu/libglut.so  -lGLU  -lm  /usr/lib/x86_64-linux-gnu/libGLX.so  /usr/lib/x86_64-linux-gnu/libOpenGL.so
   OBJECT_DIR = CMakeFiles/raycaster.dir
