@@ -1,5 +1,6 @@
 #include "player.h"
 
+#include <stdio.h>
 // Define a player
 Player player = {150, 400, 0, 0, -90, 5, 3, 100};
 
@@ -27,6 +28,7 @@ void Buttons(unsigned char key,int x,int y)
         player.direction_x = cos(degToRad(player.angle));
         player.direction_y = sin(degToRad(player.angle));
     }
+    //printf("Player x %d y %d\n",player.postion_x,player.postion_y);
     glutPostRedisplay();
 }
 
@@ -37,10 +39,12 @@ void DrawPlayer2D()
     glBegin(GL_POINTS);
     glVertex2i(player.postion_x,player.postion_y);
     glEnd();
+    /*
     DrawRay2D(
             player.postion_x,
             player.postion_y,
             player.postion_x+player.direction_x*player.ray_size,
             player.postion_y+player.direction_y*player.ray_size
     );
+     */
 }

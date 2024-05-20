@@ -5,4 +5,6 @@
 #define SCREEN_HEIGHT 510
 #define SCREEN_NAME "Raycaster"
 
+#define DEPTH_OF_FIELD 3
+
 #endif //RAYCASTER_GLOBALS_H

@@ -9,7 +9,7 @@
 
 // 2D Functions
 void DrawPlayer2D();
-void DrawRay2D(int x1,int y1,int x2,int y2);
+void DrawRay2D(int x1, int y1, int x2, int y2, int r, int g, int b, float lineWidth);
 void DrawRays2D();
 
 #endif //RAYCASTER_RAYS_H
