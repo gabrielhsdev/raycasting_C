@@ -1,15 +1,14 @@
 #include "rays.h"
-
-#include <stdio.h>
+#include "../rendering/map/render.h"
 #include <GL/glut.h>
 
 void DrawRays2D()
 {
     float ray_vertical_x, ray_vertical_y, ray_horizontal_y, ray_horizontal_x, ray_inc_x, ray_inc_y, distance_v, distance_h, ray_x, ray_y;
     int r, map_x, map_y, depth_of_field;
-    player.ray_angle = player.angle;
+    player.ray_angle = player.angle - 32;
 
-    for (r = 0; r < 1; r++) {
+    for (r = 0; r < 64; r++) {
         // Check Horizontal Lines
         depth_of_field = 0;
         distance_h = 100000;
@@ -18,13 +17,13 @@ void DrawRays2D()
         float aTan = -1 / tan(degToRad(player.ray_angle));
 
         // Looking foward
-        if (player.ray_angle > 180 || player.ray_angle < 0) // Looking up
+        if (player.ray_angle > 180.0f || player.ray_angle < 0.0f) // Looking up
         {
             ray_y = (((int) player.postion_y / MAP_BLOCK_SIZE_PX) * MAP_BLOCK_SIZE_PX) - 0.0001;
             ray_x = (player.postion_y - ray_y) * aTan + player.postion_x;
             ray_inc_y = -MAP_BLOCK_SIZE_PX;
             ray_inc_x = -ray_inc_y * aTan;
-        } else if (player.ray_angle < 180 && player.ray_angle > 0) // Looking down
+        } else if (player.ray_angle < 180.f && player.ray_angle > 0.0f) // Looking down
         {
             ray_y = (((int) player.postion_y / MAP_BLOCK_SIZE_PX) * MAP_BLOCK_SIZE_PX) + MAP_BLOCK_SIZE_PX;
             ray_x = (player.postion_y - ray_y) * aTan + player.postion_x;
@@ -62,12 +61,12 @@ void DrawRays2D()
         float nTan = -tan(degToRad(player.ray_angle));
 
         // Looking right
-        if (player.ray_angle < 90 || player.ray_angle > 270) {
+        if (player.ray_angle < 90.0f || player.ray_angle > 270.0f) {
             ray_x = (((int) player.postion_x / MAP_BLOCK_SIZE_PX) * MAP_BLOCK_SIZE_PX) + MAP_BLOCK_SIZE_PX;
             ray_y = (player.postion_x - ray_x) * nTan + player.postion_y;
             ray_inc_x = MAP_BLOCK_SIZE_PX;
             ray_inc_y = -ray_inc_x * nTan;
-        } else if (player.ray_angle > 90 && player.ray_angle < 270) // Looking left
+        } else if (player.ray_angle > 90.0f && player.ray_angle < 270.0f) // Looking left
         {
             ray_x = (((int) player.postion_x / MAP_BLOCK_SIZE_PX) * MAP_BLOCK_SIZE_PX) - 0.0001;
             ray_y = (player.postion_x - ray_x) * nTan + player.postion_y;
@@ -103,6 +102,12 @@ void DrawRays2D()
         } else {
             DrawRay2D(player.postion_x, player.postion_y, ray_horizontal_x, ray_horizontal_y, 0, 1, 0, 1);
         }
+
+        // Render 3D Wall
+        DrawWall3D(distance_v, distance_h, r);
+
+
+        player.ray_angle = FixAng(player.ray_angle + 1.0f);
     }
 }
 

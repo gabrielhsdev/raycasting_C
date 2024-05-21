@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 // Define a player
-Player player = {150, 400, 0, 0, -90, 5, 3, 100};
+Player player = {150, 400, 0, 0, 0, 10, 10, 100, 0};
 
 void Buttons(unsigned char key,int x,int y)
 {

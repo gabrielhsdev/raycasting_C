@@ -20,6 +20,8 @@ add_executable(raycaster main.c globals.h
         utils/utils.h
         rays/rays.c
         rays/rays.h
+        rendering/map/render.c
+        rendering/map/render.h
 )
 
 # Link against OpenGL, GLUT, GLU, and the math library
